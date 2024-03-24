@@ -41,7 +41,7 @@ def main():
             number = int(file.readline().strip())
             factors = pollard_rho(number)
             if factors:
-                print(f"{number}={factors[0]}*{factors[1]}")
+                print(f"{number}={factors[1]}*{factors[0]}")
             else:
                 print(f"No prime factors found for {number}.")
     except FileNotFoundError:
