@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 import sys
-import time
 
 def factorize(num):
     factors = []
@@ -26,9 +25,3 @@ def main():
                 print(f"{num}={factors[0][0]}*{factors[0][1]}")
     except FileNotFoundError:
         print(f"File {file_name} not found.")
-
-if __name__ == "__main__":
-    start_time = time.time()
-    main()
-    end_time = time.time()
-    print(f"Execution time: {end_time - start_time:.3f} seconds")
