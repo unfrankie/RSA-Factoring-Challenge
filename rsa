@@ -2,25 +2,52 @@
 import sys
 import time
 
-def factorize_rsa_challenge(n):
-    p = 2
-    while n % p != 0:
-        p += 1
-    q = n // p
-    return (p, q)
+def gcd(a, b):
+    while b != 0:
+        a, b = b, a % b
+    return a
 
-def factorize_all_rsa_challenge(filename):
-    with open(filename, 'r') as file:
-        numbers = file.read().strip().split('\n')
-    
-    for num in numbers:
-        num = int(num)
-        primes = factorize_rsa_challenge(num)
-        print(f"{num}={primes[0]}*{primes[1]}")
+def pollard_rho(n):
+    if n == 1:
+        return [1]
+    if n % 2 == 0:
+        return [2, n // 2]
+
+    x = 2
+    y = 2
+    d = 1
+
+    f = lambda x: (x ** 2 + 1) % n
+
+    while d == 1:
+        x = f(x)
+        y = f(f(y))
+        d = gcd(abs(x - y), n)
+
+    if d == n:
+        return None
+    else:
+        return [d, n // d]
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python rsa.py <file>")
+        return
+
+    file_name = sys.argv[1]
+
+    try:
+        with open(file_name, 'r') as file:
+            number = int(file.readline().strip())
+            factors = pollard_rho(number)
+            if factors:
+                print(f"{number}={factors[0]}*{factors[1]}")
+            else:
+                print(f"No prime factors found for {number}.")
+    except FileNotFoundError:
+        print(f"File {file_name} not found.")
 
 if __name__ == "__main__":
     start_time = time.time()
-    filename = sys.argv[1]
-    factorize_all_rsa_challenge(filename)
+    main()
     end_time = time.time()
-    print("\nExecution time:", round(end_time - start_time, 3), "seconds")
